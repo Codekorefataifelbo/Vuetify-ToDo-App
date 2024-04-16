@@ -1,88 +1,99 @@
 <template>
-  <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app>
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title class="title">
-            Vuetify Todo
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            Best Todo Ever!
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
+	<v-app>
+        <v-navigation-drawer app :mobile-breakpoint="768" v-model="drawer">
+            <v-img
+                class="pa-4 pt-7"
+                src="nature.jpg"
+                height="170"
+                gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"
+            >
+                <v-avatar size="70" class="mb-2 border">
+                    <img src="profile-pic.jpg" alt="user" />
+                </v-avatar>
+                <div style="color: white;" class="text-subtitle-1 font-weight-bold">
+                    <a>Arif Ul Hoque</a>
+                </div>
+                <div style="color: white;" class="text-subtitle-2"><a href="https://www.linkedin.com/in/arif-hoque-83239189/">Software Engineer</a></div>
+            </v-img>
 
-      <v-divider></v-divider>
+			<v-list dense nav>
+				<v-list-item v-for="item in items" :key="item.title" link :to="item.to">
+					<v-list-item-icon>
+						<v-icon>{{ item.icon }}</v-icon>
+					</v-list-item-icon>
 
-      <v-list dense nav>
-        <v-list-item
-          v-for="item in items"
-          :key="item.title"
-          :to="item.to"
-          link
-        >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
+					<v-list-item-content>
+						<v-list-item-title>{{ item.title }}</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+			</v-list>
+		</v-navigation-drawer>
 
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+		<v-app-bar
+			app
+			color="primary"
+			dark
+			src="nature.jpg"
+			prominent
+			:height="$route.path === '/' ? 236 : 170"
+		>
+			<template v-slot:img="{ props }">
+				<v-img
+					v-bind="props"
+					gradient="to top right, rgba(19,84,122,.75), rgba(128,208,199,.75)"
+				></v-img>
+			</template>
 
-    <v-app-bar app color="primary" dark src="mountains.jpg" prominent>
-      <template v-slot:img="{ props }">
-        <v-img
-          v-bind="props"
-          gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"
-        ></v-img>
-      </template>
+			<v-container class="header-container">
+				<v-row>
+					<v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+					<v-spacer></v-spacer>
+					<search />
+				</v-row>
+				<v-row>
+					<v-toolbar-title class="text-h4 ml-4">
+						{{ $store.state.appTitle }}
+					</v-toolbar-title>
+				</v-row>
+				<v-row>
+					<live-date-time />
+				</v-row>
+				<v-row v-if="$route.path === '/'">
+					<field-add-task />
+				</v-row>
+			</v-container>
+		</v-app-bar>
 
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title>Vuetify Todo</v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
-      <router-view></router-view>
-    </v-main>
-  </v-app>
+		<v-main>
+			<router-view></router-view>
+			<snackbar />
+		</v-main>
+	</v-app>
 </template>
 
-
-<!-- END OF TEMPLATE -->
-
-
-<script setup>
-  import { ref } from 'vue'
-
-  const drawer = ref(null)
-</script>
-
 <script>
-  export default {
-    data: () => ({
-      drawer: null,
-      items: [
-        { title: 'Todo', icon: 'mdi-format-list-checks', to: '/' },
-        { title: 'About', icon: 'mdi-help-box', to: '/about' },
-      ],
-    }),
-  }
+export default {
+	data: () => ({
+		drawer: null,
+		items: [
+			{ title: 'Todo', icon: 'mdi-format-list-checks', to: '/' },
+			{ title: 'About', icon: 'mdi-help-box', to: '/about' },
+		],
+	}),
+	mounted() {
+		this.$store.dispatch('getTasks')
+	},
+	components: {
+		'field-add-task': require('@/components/Todo/FieldAddTask.vue').default,
+		snackbar: require('@/components/Shared/Snackbar.vue').default,
+		search: require('@/components/Tools/Search.vue').default,
+		'live-date-time': require('@/components/Tools/LiveDateTime.vue').default,
+	},
+}
 </script>
+
+<style lang="scss">
+.header-container {
+	max-width: none !important;
+}
+</style>
