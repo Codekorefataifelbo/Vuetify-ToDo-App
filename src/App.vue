@@ -3,9 +3,9 @@
         <v-navigation-drawer app :mobile-breakpoint="768" v-model="drawer">
             <v-img
                 class="pa-4 pt-7"
-                src="nature.jpg"
+				src="LandscapePic.png"
                 height="170"
-                gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"
+                
             >
                 <v-avatar size="70" class="mb-2 border">
                     <img src="profile-pic.jpg" alt="user" />
@@ -33,14 +33,14 @@
 			app
 			color="primary"
 			dark
-			src="nature.jpg"
+			src="LandscapePic.png"
 			prominent
 			:height="$route.path === '/' ? 236 : 170"
 		>
 			<template v-slot:img="{ props }">
 				<v-img
 					v-bind="props"
-					gradient="to top right, rgba(19,84,122,.75), rgba(128,208,199,.75)"
+					
 				></v-img>
 			</template>
 
